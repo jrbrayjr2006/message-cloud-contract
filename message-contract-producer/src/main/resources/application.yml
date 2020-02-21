@@ -1,0 +1,9 @@
+server:
+  port: 8080
+spring:
+  cloud:
+    stream:
+      bindings:
+        register-out-0:
+          destination: registration-channel
+          group: registered
