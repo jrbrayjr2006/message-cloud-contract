@@ -48,6 +48,21 @@ spring:
           group: registered
 ```
 
+### Event Emitter
+In this sample application, a Spring Cloud Streams `Supplier` is used in an event emitter to create registration events on a channel in RabbitMQ.
+
+```java
+    private EmitterProcessor<Registration> processor;
+
+    @Bean
+    public Supplier<Flux<Registration>> register() {
+        Registration registration = new Registration();
+        return () -> Flux.from(processor -> processor.onNext(registration));
+    }
+```
+
+Spring Cloud Streams 3.0.x allows the stream to be wired up via an ordinary String bean.
+
 ## Contract Consumer Sub-Project (message-contract-consumer
 
 ### Consumer Configuration
