@@ -13,6 +13,8 @@ This example uses a extremely simplified hospital admission scenario to illustra
 - Registration (supplier/producer)
 - Admittance (consumer)
 
+![Meical Flow Diagram](images/medical-hospital-admittance.png)
+
 ## Setup
 
 ### Local Development Environment
@@ -33,6 +35,18 @@ It can be difficult to run Docker on Windows in many cases, so RabbitMQ can be i
 ## Contract Producer Sub-Project (message-contract-producer)
 
 ### Producer (Supplier) Configuration
+
+Spring Cloud Streams 3.x will automatically configure a channel, but a destination can be configured in the `application.yml` if desired.
+
+```yaml
+spring:
+  cloud:
+    stream:
+      bindings:
+        register-out-0:
+          destination: registration-channel
+          group: registered
+```
 
 ## Contract Consumer Sub-Project (message-contract-consumer
 
