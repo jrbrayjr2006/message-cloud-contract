@@ -19,7 +19,7 @@ public class RegistrationController {
 
     @PostMapping( value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE )
     public ResponseEntity<Void> registerPatient(@RequestBody Registration registration) {
-        registrationEventEmitter.register();
+        registrationEventEmitter.handleMessage(registration);
         return ResponseEntity.ok().build();
     }
 

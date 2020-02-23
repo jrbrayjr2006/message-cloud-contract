@@ -102,6 +102,9 @@
                 <version>2.2.1.RELEASE</version>
                 <extensions>true</extensions>
                 <configuration>
+                    <baseClassForTests>
+                        com.jrbrayjr.cloud.contract.messagecontractproducer.PatientRegistrationVerifierBase
+                    </baseClassForTests>
                     <testFramework>JUNIT5</testFramework>
                 </configuration>
             </plugin>

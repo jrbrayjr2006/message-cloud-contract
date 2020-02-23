@@ -1,0 +1,14 @@
+description: "A patient registration contract"
+label: Registration
+input:
+  # the contract will be triggered by a method
+  triggeredBy: patientRegistrationTriggered()
+outputMessage:
+  sentTo: register
+  body:
+    patientName: "John Doe"
+    primaryPhysician: "Doctor Spock"
+    admitted: true
+    healthInsurer: "Acme Insurance"
+  headers:
+    content-type: application/json

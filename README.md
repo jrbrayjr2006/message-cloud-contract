@@ -13,7 +13,7 @@ This example uses a extremely simplified hospital admission scenario to illustra
 - Registration (supplier/producer)
 - Admittance (consumer)
 
-![Meical Flow Diagram](images/medical-hospital-admittance.png)
+![Medical Flow Diagram](images/medical-hospital-admittance.png)
 
 ## Setup
 
@@ -34,6 +34,17 @@ It can be difficult to run Docker on Windows in many cases, so RabbitMQ can be i
 
 ## Contract Producer Sub-Project (message-contract-producer)
 
+The registration message from the supplier has the following structure:
+
+```json
+{
+  "patientName": "John Doe",
+  "primaryPhysician": "Doctor Spock",
+  "admitted": true
+  "healthInsurer": "Acme Insurance"
+}
+```
+
 ### Producer (Supplier) Configuration
 
 Spring Cloud Streams 3.x will automatically configure a channel, but a destination can be configured in the `application.yml` if desired.
@@ -52,6 +63,8 @@ spring:
 In this sample application, a Spring Cloud Streams `Supplier` is used in an event emitter to create registration events on a channel in RabbitMQ.
 
 ```java
+    ...
+    ...
     private EmitterProcessor<Registration> processor;
 
     @Bean
@@ -59,17 +72,21 @@ In this sample application, a Spring Cloud Streams `Supplier` is used in an even
         Registration registration = new Registration();
         return () -> Flux.from(processor -> processor.onNext(registration));
     }
+    ...
 ```
 
 Spring Cloud Streams 3.0.x allows the stream to be wired up via an ordinary String bean.
 
-## Contract Consumer Sub-Project (message-contract-consumer
+## Contract Consumer Sub-Project (message-contract-consumer)
 
 ### Consumer Configuration
 
 ## References
 
 - [Introducing Spring Cloud Contract](https://cloud.spring.io/spring-cloud-contract/reference/html/getting-started.html#getting-started-introducing-spring-cloud-contract)
+- [Spring Cloud Contracts](https://cloud.spring.io/spring-cloud-contract)
+- [Contract DSL](https://cloud.spring.io/spring-cloud-contract/multi/multi__contract_dsl.html)
 - [Enforcing Spring Cloud Contracts Over AMQP](https://novotnyr.github.io/scrolls/enforcing-spring-cloud-contracts-over-amqp/)
 - [Contracts on the Producer Side 2.1.3.BUILD-SNAPSHOT](https://cloud-samples.spring.io/spring-cloud-contract-samples/tutorials/contracts_on_the_producer_side.html#_producer_flow_1)
 - [Spring Cloud Streams 3.0.x](https://cloud.spring.io/spring-cloud-static/spring-cloud-stream/3.0.0.RELEASE/reference/html/spring-cloud-stream.html#spring-cloud-stream-reference)
+- [JUnit 5 Overview](https://junit.org/junit5/docs/current/user-guide/)

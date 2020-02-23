@@ -51,6 +51,6 @@ class RegistrationControllerTest {
         mockMvc.perform(post(endpoint).contentType(MediaType.APPLICATION_JSON).content(requestJson)).andExpect(status().isOk());
 
         // Then
-        verify(mockEmitter).register();
+        verify(mockEmitter).handleMessage(someRegistration);
     }
 }
