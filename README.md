@@ -63,16 +63,26 @@ spring:
 In this sample application, a Spring Cloud Streams `Supplier` is used in an event emitter to create registration events on a channel in RabbitMQ.
 
 ```java
-    ...
-    ...
-    private EmitterProcessor<Registration> processor;
+@Component
+public class RegistrationEventEmitter {
+
+    private EmitterProcessor<Message<Registration>> processor;
+
+    public RegistrationEventEmitter(EmitterProcessor<Message<Registration>> processor) {
+        this.processor = processor;
+    }
+
+    public void handleMessage(Registration registration) {
+        Message<Registration> message = MessageBuilder.withPayload(registration).build();
+        processor.onNext(message);
+    }
 
     @Bean
-    public Supplier<Flux<Registration>> register() {
-        Registration registration = new Registration();
-        return () -> Flux.from(processor -> processor.onNext(registration));
+    public Supplier<Flux<Message<Registration>>> register() {
+        return () -> processor;
     }
-    ...
+
+}
 ```
 
 Spring Cloud Streams 3.0.x allows the stream to be wired up via an ordinary String bean.
@@ -80,6 +90,45 @@ Spring Cloud Streams 3.0.x allows the stream to be wired up via an ordinary Stri
 ## Contract Consumer Sub-Project (message-contract-consumer)
 
 ### Consumer Configuration
+
+The `application.yml` is shown below:
+
+```yaml
+spring:
+  cloud:
+    stream:
+      bindings:
+        register-out-0:
+          destination: registration-channel
+          group: registered
+```
+
+### Consumer Handler
+
+A handler class is used to act on messages that the consumer gets.  Below we use a Spring Bean to listen for messages in the stream for consumption.
+
+```java
+@Component
+public class RegistrationHandler {
+
+    @Bean
+    public Consumer<Registration> register() {
+        return registration -> {
+            System.out.println(registration.patientName);
+        };
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    static class Registration {
+        private String patientName;
+        private String primaryPhysician;
+        private Boolean admitted;
+        private String healthInsurer;
+    }
+}
+```
 
 ## References
 
